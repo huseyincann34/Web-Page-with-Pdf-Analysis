@@ -1,0 +1,2072 @@
+//190202078 Hamit Doğan- 190202066 Hüseyin Can Taşdemir
+a<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="GirisSayfasi.aspx.cs" Inherits="WebApplication4.GirisSayfasi"  EnableEventValidation="false"%>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+<title>Giris Ekranı</title>
+    <style>
+    .body{background:#000000;}
+    .cerceve{background:#000000; width:900px; height:600px;margin:20px auto}
+    .kullanici{background:#0c6435 ;width:350px; height:500px;float:left; margin:50px 100px 50px 50px; border-radius:30px}
+    .yonetici{background:#0c6435 ;width:350px; height:500px;float:right;margin:50px 50px 50px 0;border-radius:30px}    
+    .kullanicipng{background:url(img/1.png); width:250px;height:200px; margin:25px 50px 5px 50px; border-radius:30px}
+    .yoneticipng{background:url(img/2.png); width:250px;height:200px; margin:25px 50px 5px 50px; border-radius:30px}
+    .table{display:block; margin-left:50px;}
+    .labelYazi{display:block; width:200px; height:20px; font:bold 25px tahoma ;margin-top:10px ;margin-left:50px}
+    .labelYazi2{display:block; width:200px; height:20px;font:bold 25px tahoma ;margin-top:0px  ;margin-left:95px; }
+    .textbox{display:block;  font:bold 25px tahoma; text-align:center; margin:10px 0px 0px 25px;  }
+    .buton{display:block;font:bold 35px tahoma;margin:5px 0px 0px 25px}
+    </style>
+</head>
+<body class="body" >
+    <form id="form1" runat="server" > 
+        <div class="cerceve">
+            <%-- Kullanıcı için div --%>
+            <div class="kullanici">
+            <div class="kullanicipng"></div>
+            <table class="table">
+            <tr >
+             
+                <td class="labelYazi">
+                    <asp:Label ID="Label1" runat="server" Text="Kullanıcı Adı" ></asp:Label>
+                </td>
+                </tr>
+                <tr class="textbox">
+                   <td>
+                       <asp:TextBox ID="TextBox1" runat="server" Width="200px" Height="30px" BackColor="#c5d08b"  BorderWidth="0px" BorderStyle="None" Font-Bold="true" Font-Size="25px" ></asp:TextBox>
+                    </td>                    
+                </tr>          
+                <tr>                 
+                    <td class="labelYazi2">
+                        <asp:Label ID="Label2" runat="server" Text="Şifre"></asp:Label>
+                    </td>
+
+                </tr>
+                    <tr class="textbox">
+                       <td>
+                        <asp:TextBox ID="TextBox2" runat="server" Width="200px" Height="30px"  BackColor="#c5d08b" BorderWidth="0px" Font-Bold="true" Font-Size="25px" TextMode="Password" ></asp:TextBox>
+                       </td>
+                    </tr>
+               <tr>
+                   <td class="buton">
+                       <asp:Button ID="Button1" runat="server" Text="Giriş Yap" Width="200px"  Height="45px" Font-Bold="true" Font-Size="35px" OnClick="Button1_Click" BackColor="#c5d08b"  BorderWidth="0px"/>
+                   </td>
+               </tr>
+             <tr>
+                 <td>
+                     <asp:Label ID="Label3" runat="server" Text="Kullanıcı Adı veya Şifre Yalnış!" Font-Size="20px" ForeColor="#ffffff"></asp:Label>
+                 </td>
+             </tr>
+                
+            </table>
+            </div>
+            <%-- Yönetici için div --%>
+            <div class="yonetici">
+            <div class="yoneticipng"></div>
+                 <table class="table">
+            <tr >
+             
+                <td class="labelYazi">
+                    <asp:Label ID="Label4" runat="server" Text="Kullanıcı Adı" ></asp:Label>
+                </td>
+                </tr>
+                <tr class="textbox">
+                   <td>
+                       <asp:TextBox ID="TextBox3" runat="server" Width="200px" Height="30px" BackColor="#c5d08b" BorderWidth="0px" BorderStyle="None" Font-Bold="true" Font-Size="25px" ></asp:TextBox>
+                    </td>                    
+                </tr>          
+                <tr>                 
+                    <td class="labelYazi2">
+                        <asp:Label ID="Label5" runat="server" Text="Şifre"></asp:Label>
+                    </td>
+
+                </tr>
+                    <tr class="textbox">
+                       <td>
+                        <asp:TextBox ID="TextBox4" runat="server" Width="200px" Height="30px"  BackColor="#c5d08b" BorderWidth="0px" Font-Bold="true" Font-Size="25px" TextMode="Password" ></asp:TextBox>
+                       </td>
+                    </tr>
+               <tr>
+                   <td class="buton">
+                       <asp:Button ID="Button2" runat="server" Text="Giriş Yap" Width="200px"  Height="45px" Font-Bold="true" Font-Size="35px" OnClick="Button2_Click"  BackColor="#c5d08b"  BorderWidth="0px"/>
+                   </td>
+               </tr>
+             <tr>
+                 <td>
+                     <asp:Label ID="Label6" runat="server" Text="Kullanıcı Adı veya Şifre Yalnış!" Font-Size="20px"  ForeColor="#ffffff"></asp:Label>
+                 </td>
+             </tr>
+                
+            </table>
+            </div>
+        </div>
+    </form>
+</body>
+</html>
+
+using System;
+using System.Data.SqlClient;
+
+namespace WebApplication4
+{
+    public partial class GirisSayfasi : System.Web.UI.Page
+    {
+        SqlConnection sqlCon = new SqlConnection(@"Data Source=DESKTOP-ROLKJ2V;initial Catalog=Web;Integrated Security=true");
+        
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            Label3.Visible = false;
+            Label6.Visible = false; 
+            
+
+        }
+       
+      
+        public void Button1_Click(object sender, EventArgs e)
+        {
+            sqlCon.Open();
+            SqlCommand komut = new SqlCommand("Select * From KullaniciLogin  where KullaniciAdi=@P1 AND KullaniciSifre=@P2", sqlCon);
+            komut.Parameters.AddWithValue("@P1", TextBox1.Text.Trim());
+            komut.Parameters.AddWithValue("@P2", TextBox2.Text.Trim());
+
+            SqlDataReader dataReader = komut.ExecuteReader();
+            if (dataReader.Read())
+            {
+
+                sqlCon.Close();
+                sqlCon.Open();
+                SqlCommand komut2 = new SqlCommand("Select ID From KullaniciLogin  where KullaniciAdi=@P3 AND KullaniciSifre=@P4", sqlCon);
+                komut.Parameters.AddWithValue("@P3", TextBox1.Text.Trim());
+                komut.Parameters.AddWithValue("@P4", TextBox2.Text.Trim());              
+                SqlDataReader dataReader2 = komut.ExecuteReader();
+                if (dataReader2.Read())
+                {
+                    int ID = Convert.ToInt32(dataReader2["ID"]);                  
+                    Response.Redirect("Kullanici.aspx?ID=" + ID);
+                                   
+                }
+
+                sqlCon.Close();
+            }
+            else
+            {
+                Label3.Visible = true;           
+                sqlCon.Close();
+
+            }
+        }
+
+        public void Button2_Click(object sender, EventArgs e)
+        {
+         
+            sqlCon.Open();
+            SqlCommand komut = new SqlCommand("Select * From YoneticiLogin  where KullaniciAdi=@P1 AND KullaniciSifre=@P2", sqlCon);
+            komut.Parameters.AddWithValue("@P1", TextBox3.Text.Trim());
+            komut.Parameters.AddWithValue("@P2", TextBox4.Text.Trim());
+
+            SqlDataReader dataReader = komut.ExecuteReader();
+            if (dataReader.Read())
+            {
+
+                sqlCon.Close();
+                sqlCon.Open();
+                SqlCommand komut2 = new SqlCommand("Select ID From YoneticiLogin  where KullaniciAdi=@P3 AND KullaniciSifre=@P4", sqlCon);
+                komut.Parameters.AddWithValue("@P3", TextBox3.Text.Trim());
+                komut.Parameters.AddWithValue("@P4", TextBox4.Text.Trim());
+                SqlDataReader dataReader2 = komut.ExecuteReader();
+                if (dataReader2.Read())
+                {
+                    int ID = Convert.ToInt32(dataReader2["ID"]);
+                    Response.Redirect("Yonetici.aspx?ID=" + ID);
+
+                }
+
+                sqlCon.Close();
+            }
+            else
+                {
+                    Label6.Visible = true;
+
+                }
+            }
+        }
+    }
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Kullanici.aspx.cs" Inherits="WebApplication4.Kullanici"  EnableEventValidation="false" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Kullanıcı Sayfası</title>
+    <style>
+        .body{background:#000000;}
+        .baslik{margin: 3% 0 0 32%;color:white}
+        .cerceve{background:#000000; width:100%; height:80%;margin:0 3% 0 0;float:left}
+        .kullanici{background:#0c6435 ;width:850px; height:600px;float:left; margin:2% 15%  0 25%; border-radius:30px;padding-left:2%}
+        .sorgu{background:#0c6435 ; width:400px; height:600px;float:right;margin-left:0px;margin-top:20px;border-radius:30px ;margin-right:80px}
+        .ortala{margin:1% 0 1% 5%}
+        .auto-style1 {
+            background: #0c6435;
+            width: 768px;
+            height: 566px;           
+            margin: 2% 35% 0 27%;
+            border-radius: 30px;
+            padding-left: 2%;
+        }
+    </style>
+    
+</head>
+<body class="body">
+    <form id="form1" runat="server">
+       <h1 class="baslik" >KULLANICI SAYFASINA HOŞGELDİNİZ</h1>
+            <div class="cerceve">
+     <%--yüklenecek pdf alanı--%>
+                <div class="auto-style1">
+                     <br /><br /> 
+                      <asp:FileUpload ID="FileUpload1" runat="server" Height="40px" Width="300px" Font-Bold="True" Font-Italic="False" Font-Names="Arial" Font-Overline="False" Font-Size="Medium" />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="Upload" Height="40px" Width="143px" Font-Bold="True" Font-Names="Arial" Font-Size="Medium" />
+            <br />
+            <asp:Label ID="Label1" runat="server" Font-Bold="True" Font-Size="Large" ForeColor="Red"></asp:Label>
+                    <br />
+                     <br />
+                     <br />
+           
+                    <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" BackColor="#CCCCCC" BorderColor="#999999" BorderStyle="Solid" BorderWidth="3px" CellPadding="4" CellSpacing="2" ForeColor="Black" Height="158px" Width="637px"  Font-Bold="True" Font-Names="Arial" Font-Size="Large" CssClass="ortala" >
+                         
+                        <Columns>
+                            <asp:TemplateField HeaderText="ID">                                
+                                <ItemTemplate >
+                                    <%# Eval("ID") %>
+                                </ItemTemplate>
+                            </asp:TemplateField>   
+                           
+                            <asp:TemplateField HeaderText="Dosya Adi">                                
+                                <ItemTemplate >
+                                    <%# Eval("DosyaAdi") %>
+                                </ItemTemplate>
+                            </asp:TemplateField>  
+                              <asp:TemplateField HeaderText="Pdf ID">                                
+                                <ItemTemplate >
+                                    <%# Eval("PdfID") %>
+                                </ItemTemplate>
+                            </asp:TemplateField>  
+                           <asp:TemplateField HeaderText="Bilgiler">
+                               <ItemTemplate>
+                                   
+                                   <%--<asp:LinkButton ID="LinkButton1" runat="server"  OnClick="LinkButton1_Click" DataKeyNames="ProfilePic" > <%# Eval("DosyaAdi") %> Bilgileri</asp:LinkButton>--%>
+                              <asp:Button ID="buton1" runat="server"  OnClick="buton1_Click" Text="Bilgiler" Width="300px" Height="35px" CssClass="ortala" Font-Bold="True" Font-Names="Arial" Font-Size="Large" />
+                                   </ItemTemplate>
+                           </asp:TemplateField>
+
+                        </Columns>
+                        <FooterStyle BackColor="#CCCCCC" />
+                        <HeaderStyle BackColor="Black" Font-Bold="True" ForeColor="White" />
+                        <PagerStyle BackColor="#CCCCCC" ForeColor="Black" HorizontalAlign="Left" />
+                        <RowStyle BackColor="White" />
+                        <SelectedRowStyle BackColor="#000099" Font-Bold="True" ForeColor="White" />
+                        <SortedAscendingCellStyle BackColor="#F1F1F1" />
+                        <SortedAscendingHeaderStyle BackColor="#808080" />
+                        <SortedDescendingCellStyle BackColor="#CAC9C9" />
+                        <SortedDescendingHeaderStyle BackColor="#383838" />
+                     </asp:GridView>
+                    </div>
+                </div>
+    </form>
+</body>
+</html>
+using System;
+using System.Data.SqlClient;
+using System.Data;
+using System.Configuration;
+using System.IO;
+using System.Web.UI.WebControls;
+using System.Data.OleDb;
+namespace WebApplication4
+
+{
+    public partial class Kullanici : System.Web.UI.Page
+    {
+
+        SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString);
+        string connectionString = @"Data Source=DESKTOP-ROLKJ2V;Initial Catalog=Web;Integrated Security=True";
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            ID = Request.QueryString["ID"];
+            using (SqlConnection sqlcon = new SqlConnection(connectionString))
+            {
+
+                sqlcon.Open();
+
+                SqlCommand komut = new SqlCommand("select * from PdfBilgileri WHERE [ID] = @p1", sqlcon);
+                komut.Parameters.AddWithValue("@p1", ID);
+                komut.Connection = con;
+                DataTable dt = new DataTable();
+                using (SqlDataAdapter sda = new SqlDataAdapter(komut))
+                {
+                    sda.Fill(dt);
+                    GridView1.DataSource = dt;
+                   
+                    GridView1.DataBind();
+                }
+             
+
+                sqlcon.Close();
+            }
+
+
+
+
+
+        }
+   
+   
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+
+            if (FileUpload1.HasFile)
+            {
+                string fname = FileUpload1.PostedFile.FileName;
+                string extension = Path.GetExtension(fname);
+                int fsize = FileUpload1.PostedFile.ContentLength;
+
+                int flag = 0;
+                switch (extension.ToLower())
+                {
+                    case ".pdf":
+                        flag = 1;
+                        break;
+                    default:
+                        flag = 0;
+                        break;
+
+                }
+                if (flag == 1)
+                {
+                    FileUpload1.SaveAs(Server.MapPath("~/Files/") + fname);
+                    string PdfUrl = @"C:\Users\LENOVO\source\repos\WebApplication4\WebApplication4\Files\" + fname;
+                    ClientScript.RegisterStartupScript(this.GetType(), "myalert", "alert('" + ID + "');", true);
+                    SqlCommand cmd = new SqlCommand("insert into PdfBilgileri(ID,DosyaAdi,PdfUrl) values(@p1,@p2,@p3)", con);
+                    con.Open();
+                    cmd.Parameters.AddWithValue("@p1", ID);
+                    cmd.Parameters.AddWithValue("@p2", fname);
+                    cmd.Parameters.AddWithValue("@p3", PdfUrl);
+
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                    Label1.Text = "Dosya yükleme başarılı";
+                    Label1.ForeColor = System.Drawing.Color.White;
+                }
+                else
+                {
+                    Label1.ForeColor = System.Drawing.Color.Red;
+                    Label1.Text = "Sadece pdf formatında dosya yüklenebilir.";
+                }
+
+            }
+            else
+            {
+                Label1.Text = "Dosya Secin";
+            }
+        }
+   
+        protected void buton1_Click(object sender, EventArgs e)
+        {
+            Button link=sender as Button;
+            GridViewRow gridRow = link.NamingContainer as GridViewRow;  
+            int satir = gridRow.RowIndex;
+
+            using (SqlConnection sqlcon = new SqlConnection(connectionString))
+            {
+
+                sqlcon.Open();
+
+                SqlCommand komut = new SqlCommand("select * from PdfBilgileri WHERE [ID] = @p1", sqlcon);
+                komut.Parameters.AddWithValue("@p1", ID);
+                komut.Connection = sqlcon;
+                DataTable dt = new DataTable();
+                using (SqlDataAdapter sda = new SqlDataAdapter(komut))
+                {
+                    sda.Fill(dt);
+                    GridView1.DataSource = dt;
+                    String ID = dt.Rows[satir][0].ToString();
+                    String DosyaAdi2=dt.Rows[satir][1].ToString();
+                    String PdfID = dt.Rows[satir][3].ToString();
+                   
+                    Response.Redirect("KullaniciPdfBilgileri.aspx?DosyaAdi=" + DosyaAdi2+"&PdfID="+PdfID+"&ID="+ID);
+                    //ClientScript.RegisterStartupScript(this.GetType(), "myalert", "alert('" + ID + "');", true);
+                    GridView1.DataBind();
+                   
+                }
+               
+                sqlcon.Close();
+            }
+         
+        }
+
+ 
+    }
+}
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="KullaniciPdfBilgileri.aspx.cs" Inherits="WebApplication4.KullaniciPdfBilgileri" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Kullanici PDF Sayfasi</title>
+    <style>
+        .baslik{margin: 1% 0 0 32%;color:white}
+        .body{background:#000000;}
+        .cerceve{background:#000000; width:100%; height:85%;margin:0 3% 0 0;float:left}
+        .kullanici{background:#0c6435 ;width:45%; height:650px;float:left; margin-top:1%;margin-left:1%; border-radius:30px;padding-left:2%}
+        .sorgu{background:#0c6435 ; width:40%; height:650px;float:right;margin-top:1%; border-radius:30px }
+        .labelYazi{display:block; width:400px; height:25px; font:bold 25px tahoma ;margin-top:5px ;margin-left:50px}
+        .ortala{margin-left:5px}
+        .auto-style1 {
+            background: #0c6435;
+            width: 40%;
+            height: 1035px;
+            float: left;
+            margin-top: 1%;
+         
+            margin-left: 1%;
+            border-radius: 30px;
+            padding-left: 2%;
+        }
+        .auto-style2 {
+            background: #0c6435;
+            width: 55%;
+            height: 1032px;
+            float: right;
+            margin-top: 1%;
+            border-radius: 30px;
+            color:aliceblue;
+        }
+        .auto-style3 {
+            display: block;
+            font: bold 25px tahoma;
+            margin-top: 5px;
+            
+        }
+        .auto-style4 {
+            display: block;
+            font: bold 25px tahoma;
+            margin-top: 0px;
+            margin-left: 50px;
+        }
+        .auto-style5 {
+            display: block;
+            font: bold 25px tahoma;
+            margin-top: 5px;
+            margin-left: 50px;
+        }
+        .auto-style6 {
+            background: #000000;
+            width: 97%;
+            height: 1089px;
+            margin: 0 3% 0 0;
+            float: left;
+        }
+        .auto-style7 {
+            width: 100%;
+        }
+        .Bir{Width:5%}
+        .iki{Width:10%}
+        .uc{Width:15%}
+        .dort{Width:10%}
+        .bes{Width:10%}
+        .alti{Width:20%}
+        .yedi{Width:10%}
+        .sekiz{Width:20%}
+
+        .auto-style8 {
+            Width: 5%;
+            height: 26px;
+        }
+        .auto-style9 {
+            Width: 10%;
+            height: 26px;
+        }
+        .auto-style10 {
+            Width: 15%;
+            height: 26px;
+        }
+        .auto-style11 {
+            Width: 20%;
+            height: 26px;
+        }
+
+        </style>
+</head>
+<body class="body">
+    <form id="form1" runat="server">
+        <h1 class="baslik" >KULLANICI PDF BİLGİLERİ</h1>
+        <div class="auto-style6">
+            <%--Bilgiler Kısmı--%>
+            <div class="auto-style2">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:WebConnectionString %>" SelectCommand="SELECT * FROM [YoneticiPdfBilgileri]"></asp:SqlDataSource>
+                <br />
+                <br />
+                <br />
+                &nbsp;&nbsp;<asp:DataList ID="DataList1" runat="server" BackColor="#CCCCCC" BorderColor="#999999" BorderStyle="Solid" BorderWidth="3px" CellPadding="4" CellSpacing="2" ForeColor="Black" GridLines="Both" Width="100%" Height="500px" CssClass="ortala">
+                    <FooterStyle BackColor="#CCCCCC" />
+                    <HeaderStyle BackColor="Black" Font-Bold="True" ForeColor="White" />
+                    <HeaderTemplate>
+                        <table class="auto-style7">
+                            <tr>
+                                <td class="Bir">ID</td>
+                                <td class="iki">Yazar Bilgisi</td>
+                                <td class="uc">Ders adı</td>
+                               
+                                <td class="dort">Tarih</td>
+                                <td class="bes">Baslik</td>
+                                <td class="alti">Anahtar Kelimeler</td>
+                                <td class="yedi">Danışman</td>
+                                <td class="sekiz">Juri Bilgisi</td>
+                            </tr>
+                        </table>
+                    </HeaderTemplate>
+                    <ItemStyle BackColor="White" />
+                    <ItemTemplate>
+                        <table class="auto-style7">
+                            <tr>
+                                <td class="auto-style8"><%# Eval("PdfID")%></td>
+                                <td class="auto-style9"><%# Eval("YazarBilgileri")%></td>
+                                <td class="auto-style10"><%# Eval("DersAdi")%></td>                              
+                                <td class="auto-style9"><%# Eval("ProjeninTeslimEdildigiDonem")%></td>
+                                <td class="auto-style9"><%# Eval("ProjeBasligi")%></td>
+                                <td class="auto-style11"><%# Eval("AnahtarKelimeler")%></td>
+                                <td class="auto-style9"><%# Eval("DanismanBilgiler")%></td>
+                                <td class="auto-style11"><%# Eval("JuriBilgileri")%></td>
+                            </tr>
+                        </table>
+                    </ItemTemplate>
+                    <SelectedItemStyle BackColor="#000099" Font-Bold="True" ForeColor="White" />
+                </asp:DataList>
+            </div>
+            <div class="auto-style1">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <asp:Label ID="Label1" runat="server" Text="Yazar Bilgileri" CssClass="auto-style3" Width="210px" ForeColor="White"></asp:Label>
+                    <br />
+                    <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <asp:TextBox ID="TextBox1" runat="server" Height="32px" Width="400px" Font-Bold="True" Font-Names="Arial" Font-Size="18px"></asp:TextBox> 
+                    <asp:Button ID="Button1" runat="server" Font-Bold="True" Font-Names="Arial" Font-Size="Large" Height="37px" OnClick="Button1_Click" Text="Ara" Width="65px" />
+                    <br /> 
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                    <asp:Label ID="Label2" runat="server" Text="Ders Adı" CssClass="auto-style3" Width="217px" ForeColor="White"></asp:Label>
+                    <br />
+                    <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <asp:TextBox ID="TextBox2" runat="server" Height="32px" Width="400px" Font-Bold="True" Font-Names="Arial" Font-Size="18px"></asp:TextBox>
+                    <asp:Button ID="Button2" runat="server" Text="Ara" OnClick="Button2_Click" Font-Bold="True" Font-Names="Arial" Font-Size="Large" Height="37px" Width="65px" />
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+                    <asp:Label ID="Label3" runat="server" Text="Proje Özeti" CssClass="auto-style3" Height="34px" ForeColor="White"></asp:Label>
+                    <br />
+                    <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <asp:TextBox ID="TextBox3" runat="server" Height="212px" Width="400px" Font-Bold="True" Font-Names="Arial" Font-Size="18px" TextMode="MultiLine" > </asp:TextBox>
+                    
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <asp:Label ID="Label4" runat="server" Text="Projenin Teslim Edildiği Dönem" CssClass="auto-style3" Height="35px" Width="412px" ForeColor="White" ></asp:Label>
+                    <br />
+                    <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <asp:TextBox ID="TextBox4" runat="server" Height="32px" Width="400px" Font-Bold="True" Font-Names="Arial" Font-Size="18px"></asp:TextBox>
+                    <asp:Button ID="Button4" runat="server" Text="Ara" OnClick="Button4_Click" Font-Bold="True" Font-Names="Arial" Font-Size="Large" Height="37px" Width="65px" />
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <asp:Label ID="Label5" runat="server" Text="Proje Başlığı" CssClass="auto-style3" Height="33px" Width="184px" ForeColor="White"></asp:Label>
+                    <br />
+&nbsp;<br />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <asp:TextBox ID="TextBox5" runat="server" Height="32px" Width="400px" Font-Bold="True" Font-Names="Arial" Font-Size="18px"></asp:TextBox>
+                    <asp:Button ID="Button5" runat="server" Text="Ara" OnClick="Button5_Click" Font-Bold="True" Font-Names="Arial" Font-Size="Large" Height="37px" Width="65px" />
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <asp:Label ID="Label6" runat="server" Text="Anahtar Kelimeler" CssClass="auto-style4" Width="249px" ForeColor="White"></asp:Label>
+                    <br />
+                    <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <asp:TextBox ID="TextBox6" runat="server" Height="32px" Width="400px" Font-Bold="True" Font-Italic="False" Font-Names="Arial" Font-Size="18px"></asp:TextBox>
+                    <asp:Button ID="Button6" runat="server" Text="Ara" OnClick="Button6_Click" Font-Bold="True" Font-Names="Arial" Font-Size="Large" Height="37px" Width="65px" />
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <asp:Label ID="Label7" runat="server" Text="Danışman Bilgileri" CssClass="auto-style5" Width="264px" ForeColor="White" ></asp:Label>
+                    <br />
+                    <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <asp:TextBox ID="TextBox7" runat="server" Height="32px" Width="400px" Font-Bold="True" Font-Names="Arial" Font-Size="18px"></asp:TextBox>
+                    <asp:Button ID="Button7" runat="server" Text="Ara" OnClick="Button7_Click" Font-Bold="True" Font-Names="Arial" Font-Size="Large" Height="37px" Width="65px" />
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <asp:Label ID="Label8" runat="server" Text="Jüri Bilgileri" CssClass="auto-style5" Width="262px" ForeColor="White"></asp:Label>
+                    <br />
+                    <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <asp:TextBox ID="TextBox8" runat="server" Height="32px" Width="400px" Font-Bold="True" Font-Names="Arial" Font-Size="18px" ></asp:TextBox>
+            </div>
+            <br />
+            <%--Sorgu Kısmı--%>
+        </div>
+    </form>
+</body>
+</html>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using iTextSharp.text.pdf;
+using iTextSharp.text.pdf.parser;
+using System.IO;
+using System.Data.SqlClient;
+using System.Data;
+
+namespace WebApplication4
+{
+   
+    public partial class KullaniciPdfBilgileri : System.Web.UI.Page
+    {
+        
+        SqlConnection sqlCon = new SqlConnection(@"Data Source=DESKTOP-ROLKJ2V;initial Catalog=Web;Integrated Security=true");
+        static public string TeslimDonem;
+        static public string AnahtarKelime;
+        static public string Ogrenci;
+        static public string DersAdi;
+        static public string Ozet;
+        static public string Danisman;
+        static public string Juri;
+        static public string ProjeAdi;
+        int ID2;
+        protected void Page_Load(object sender, EventArgs e)
+        {
+
+            string DosyaAdi = Request.QueryString["DosyaAdi"];
+            string PdfID = Request.QueryString["PdfID"];
+            ID2 = Convert.ToInt32(Request.QueryString["ID"]);
+            int PDFID = Convert.ToInt32(PdfID);
+            string PdfUrl = @"C:\Users\LENOVO\source\repos\WebApplication4\WebApplication4\Files\" + DosyaAdi;
+
+            string Arama1 = pdf2(PdfUrl);
+            string Arama2 = pdf1(PdfUrl);        
+            string Ogrenci = YazarBilgisiAra(Arama1);
+            string DersAdı = DersAdiAra(Arama2);
+            string Ozet = ProjeOzetiAra(Arama1);
+            string Tarih=TeslimDonemAra(Arama2);
+            string ProjeAdı = ProjeBasligiAra(Arama2);
+            string AnahtarKelime= AnahtarKelimeleriAra(Arama2);
+            string Danisman = DanismanBilgileriAra(Arama2);
+            string Juri= JuriBilgileriAra(Arama2);
+
+            sqlCon.Open();
+            SqlCommand komut = new SqlCommand("Select * From YoneticiPdfBilgileri where PdfID=@p1 ",sqlCon);
+            komut.Parameters.AddWithValue("@p1",PDFID);
+            SqlDataReader dr = komut.ExecuteReader();
+           
+            if (dr.Read()==false)
+            {
+                sqlCon.Close();
+                sqlCon.Open();
+                SqlCommand cmd = new SqlCommand("insert into YoneticiPdfBilgileri (PdfID,YazarBilgileri,DersAdi,ProjeOzeti,ProjeninTeslimEdildigiDonem,ProjeBasligi,AnahtarKelimeler,DanismanBilgiler,JuriBilgileri,ID) values(@p1,@p2,@p3,@p4,@p5,@p6,@p7,@p8,@p9,@p10)", sqlCon);
+                cmd.Parameters.AddWithValue("@p1", PDFID);
+                cmd.Parameters.AddWithValue("@p2", Ogrenci);
+                cmd.Parameters.AddWithValue("@p3", DersAdı);
+                cmd.Parameters.AddWithValue("@p4", Ozet);
+                cmd.Parameters.AddWithValue("@p5", Tarih);
+                cmd.Parameters.AddWithValue("@p6", ProjeAdı);
+                cmd.Parameters.AddWithValue("@p7", AnahtarKelime);
+                cmd.Parameters.AddWithValue("@p8", Danisman);
+                cmd.Parameters.AddWithValue("@p9", Juri);
+                cmd.Parameters.AddWithValue("@p10", ID2);
+                cmd.ExecuteNonQuery();
+                sqlCon.Close();
+            }          
+            sqlCon.Close();
+        }
+     
+        public string pdf2(string pdfYolu)
+         {
+            if (File.Exists(pdfYolu))
+            {
+                PdfReader pdfOkuyucu = new PdfReader(pdfYolu);
+                string icerik = "";
+                for (int sayfa = 2; sayfa <= pdfOkuyucu.NumberOfPages; sayfa++)
+                {
+                    icerik += PdfTextExtractor.GetTextFromPage(pdfOkuyucu, sayfa);
+                }
+                pdfOkuyucu.Close();
+              
+                return icerik;
+            }
+            else
+            {
+               
+                return "Yok";
+            }
+          
+         }
+        public string pdf1(string pdfYolu)
+        {
+            
+            if (File.Exists(pdfYolu))
+            {
+                PdfReader pdfOkuyucu = new PdfReader(pdfYolu);
+                string icerik = "";
+                for (int sayfa = 1; sayfa <= pdfOkuyucu.NumberOfPages; sayfa++)
+                {
+                    icerik += PdfTextExtractor.GetTextFromPage(pdfOkuyucu, sayfa);
+                }
+                pdfOkuyucu.Close();
+              
+                return icerik;
+            }
+            else
+            {
+             
+                return "Yok";
+            }
+         
+        }
+         public string YazarBilgisiAra(string metin)
+         {
+            char[] strArray = metin.ToCharArray();
+            int Sonuc1 = metin.IndexOf("Öğrenci No:", 0, metin.Length - 1);
+            int Sonuc2 = metin.IndexOf("İÇİNDEKİLER", 0, metin.Length - 1);
+
+            Ogrenci = metin.Substring(Sonuc1, Sonuc2 - Sonuc1);
+            Ogrenci = Ogrenci.Replace("Öğrenci No:", String.Empty);
+            Ogrenci = Ogrenci.Replace("Adı Soyadı:", String.Empty);
+            Ogrenci = Ogrenci.Replace("İmza:", String.Empty);
+            Ogrenci = Ogrenci.Replace(".", String.Empty);
+            Ogrenci = Ogrenci.Replace("\n", String.Empty);
+
+            TextBox1.Text = Ogrenci;
+
+            return Ogrenci;
+         }
+        string DersAdiAra(string metin)
+        {
+            int Sonuc1 = metin.IndexOf("ARAŞTIRMA PROBLEMLERİ", 0, metin.Length - 1);
+            int Sonuc2 = metin.IndexOf("BİTİRME PROJESİ", 0, metin.Length - 1);
+
+            if (Sonuc1 != -1)
+            {
+                DersAdi = metin.Substring(Sonuc1, 21);
+                TextBox2.Text = DersAdi;
+                return DersAdi;
+            }
+            else
+            {
+                DersAdi = metin.Substring(Sonuc2, 15);
+                TextBox2.Text = DersAdi;
+                return DersAdi;
+            }            
+        }
+        string ProjeOzetiAra(string metin)
+        {
+            int Sonuc1 = metin.LastIndexOf("ÖZET");
+            int Sonuc2 = metin.LastIndexOf("Anahtar kelimeler:");
+            Sonuc2 = Sonuc2 - Sonuc1 - 5;
+            Ozet = metin.Substring(Sonuc1 + 5, Sonuc2);
+            TextBox3.Text = Ozet;
+            return Ozet;
+        }
+         public string TeslimDonemAra(string metin)
+        {
+      
+            int metin2 = metin.IndexOf("Tarih:", 0, metin.Length - 1);
+
+            TeslimDonem = metin.Substring(metin2 + 6, 15);
+            TeslimDonem = TeslimDonem.Replace(" ", String.Empty);
+            char[] strArray = TeslimDonem.ToCharArray();
+            int j = 0;
+            for (int i = 1; i < strArray.Length; i++)
+            {
+                if (char.IsDigit(strArray[i]))
+                    if (char.IsDigit(strArray[i + 1]))
+                        if (char.IsDigit(strArray[i + 2]))
+                            if (char.IsDigit(strArray[i + 3]))
+                            {
+                                j = i;
+                                TeslimDonem = TeslimDonem.Substring(i - 3, 7);
+                                break;
+                            }
+            }
+
+            TeslimDonem = TeslimDonem.Replace(" ", String.Empty);
+
+            int ay = Convert.ToInt32(TeslimDonem.Substring(0, 2));
+            int yil = Convert.ToInt32(TeslimDonem.Substring(TeslimDonem.Length - 4, 4));
+            if (ay < 9)
+            {
+                TeslimDonem = (yil - 1).ToString() + "-" + yil.ToString() + " BAHAR";
+            }
+            else
+            {
+                TeslimDonem = (yil).ToString() + (yil + 1).ToString() + " GÜZ";
+            }
+            
+            TextBox4.Text = TeslimDonem;
+            return TeslimDonem;
+        }
+        public string ProjeBasligiAra(string metin)
+        {
+           
+            char[] strArray = metin.ToCharArray();
+            int metin2 = DersAdi.Length;
+            int Sonuc1 = metin.IndexOf(DersAdi, 0, metin.Length - 1);
+            Sonuc1 = Sonuc1 + metin2;
+            string alfabe = "ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZabcçdefgğhıijklmnoöprsştuüvyz";
+            int k = 0;
+            for (int i = Sonuc1; i < metin.Length; i++)
+            {
+                int t = alfabe.IndexOf(strArray[i], 0, alfabe.Length - 1);
+                if (t != -1)
+                {
+                    int e = 0;
+                    for (int j = i; j < metin.Length; j++)
+                    {
+                        if (strArray[j] == '\n')
+                            e++;
+
+                        if (e > 1)
+                        {
+                            k = j;
+                            break;
+                        }
+
+                    }
+                    break;
+                }
+            }
+            ProjeAdi = metin.Substring(Sonuc1, k - Sonuc1);
+            ProjeAdi = ProjeAdi.Replace("\n", String.Empty);
+            TextBox5.Text = ProjeAdi;
+            return ProjeAdi;
+        }
+
+         public string AnahtarKelimeleriAra(string metin)
+        {
+            char[] strArray = metin.ToCharArray();
+            int b, a = 0;
+
+            int Sonuc = metin.IndexOf("Anahtar kelimeler:", 0, metin.Length - 1);
+            b = Sonuc + 18;
+            for (int i = Sonuc + 18; i < strArray.Length; i++)
+            {
+                a++;
+                if (strArray[i] == ',' || strArray[i] == '.')
+                {
+                    AnahtarKelime += metin.Substring(b, a - 1) + "  -   ";
+                    b = i + 1;
+                    a = 0;
+                }
+                if (strArray[i] == '.')
+                    break;
+            }
+            AnahtarKelime = AnahtarKelime + "  ";
+            AnahtarKelime = AnahtarKelime.Replace("\n", String.Empty);
+            AnahtarKelime = AnahtarKelime.Replace("-     ", String.Empty);
+            TextBox6.Text = AnahtarKelime;
+            return AnahtarKelime;
+           
+        }
+
+         public string DanismanBilgileriAra(string metin)
+        {
+            string metin2 = "";
+            char[] strArray = metin.ToCharArray();
+            int Sonuc1 = metin.IndexOf("Danışman", 0, metin.Length - 1);
+            int a = 0;
+            for (int i = Sonuc1 - 1; i > 0; i--)
+            {
+                a++;
+                if (strArray[i - 1] == '\n')
+                {
+                    metin2 += metin.Substring(i - 1, a);
+                    break;
+                }
+            }
+            for (int i = Sonuc1; i < Sonuc1 + 8; i++)
+            {
+                strArray[i] = 'a';
+            }
+            metin = new string(strArray);
+           
+            int b = 1;
+            for (int e = 0; e < 5; e++)
+            {
+                Sonuc1 = metin.IndexOf("Danışman", 0, metin.Length - 1);
+                if (Sonuc1 != -1)
+                {
+                    a = 0;
+                    for (int i = Sonuc1 - 1; i > 0; i--)
+                    {
+                        a++;
+                        if (strArray[i - 1] == '\n')
+                        {
+                            metin2 += "-  " + metin.Substring(i, a);
+                            b++;
+                            break;
+                        }
+                    }
+                    for (int i = Sonuc1; i < Sonuc1 + 8; i++)
+                    {
+                        strArray[i] = 'a';
+                    }
+                    metin = new string(strArray);
+                }
+            }
+            Danisman = metin2;
+            Danisman = Danisman.Replace("\n", String.Empty);
+            TextBox7.Text = Danisman;
+            return Danisman;
+
+        }
+
+
+         public string JuriBilgileriAra(string metin)
+        {
+            string metin2 = metin;
+            char[] strArray = metin.ToCharArray();
+            int Sonuc1 = metin.IndexOf("Jüri Üyesi", 0, metin.Length - 1);
+            int a = 0;
+            for (int i = Sonuc1 - 1; i > 0; i--)
+            {
+                a++;
+                if (strArray[i] == '\n')
+                {
+                    Juri += metin.Substring(i, a);
+                    break;
+                }
+            }
+            for (int i = Sonuc1; i < Sonuc1 + 10; i++)
+            {
+                strArray[i] = 'a';
+            }
+            metin = new string(strArray);
+           
+            int b = 1;
+            for (int e = 0; e < 5; e++)
+            {
+                Sonuc1 = metin.IndexOf("Jüri Üyesi", 0, metin.Length - 1);
+                if (Sonuc1 != -1)
+                {
+                    a = 0;
+                    for (int i = Sonuc1 - 1; i > 0; i--)
+                    {
+                        a++;
+                        if (strArray[i - 1] == '\n')
+                        {
+                            Juri += "-  " + metin.Substring(i, a);
+                            b++;
+                            break;
+                        }
+                    }
+                    for (int i = Sonuc1; i < Sonuc1 + 8; i++)
+                    {
+                        strArray[i] = 'a';
+                    }
+                    metin = new string(strArray);
+                }
+            }
+            metin = metin2;
+           
+            Juri = Juri.Replace("\n", String.Empty);
+            Juri = Juri.Replace("    ", String.Empty);
+            TextBox8.Text = Juri;
+            return Juri;
+        }
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+ 
+                sqlCon.Open();
+                SqlCommand komut2 = new SqlCommand("Select * From YoneticiPdfBilgileri Where ID=@p1 and  YazarBilgileri like'" + TextBox1.Text + "%'", sqlCon);
+                    komut2.Parameters.AddWithValue("@p1", ID2);
+            DataTable dt = new DataTable();
+                using (SqlDataAdapter sda = new SqlDataAdapter(komut2))
+                {
+                    sda.Fill(dt);
+                    DataList1.DataSource = dt;
+
+                    DataList1.DataBind();
+                }
+                sqlCon.Close();
+           
+        }
+
+        protected void Button2_Click(object sender, EventArgs e)
+        {
+            
+              
+                sqlCon.Open();
+                SqlCommand komut2 = new SqlCommand("Select * From YoneticiPdfBilgileri Where ID=@p1 and DersAdi like'" + TextBox2.Text + "%'", sqlCon);
+                komut2.Parameters.AddWithValue("@p1",ID2);
+                DataTable dt = new DataTable();
+                using (SqlDataAdapter sda = new SqlDataAdapter(komut2))
+                {
+                    sda.Fill(dt);
+                    DataList1.DataSource = dt;
+
+                    DataList1.DataBind();
+                    
+                }
+                sqlCon.Close();
+            
+
+        }
+
+        protected void Button3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void Button4_Click(object sender, EventArgs e)
+        {
+            sqlCon.Open();
+            SqlCommand komut2 = new SqlCommand("Select * From YoneticiPdfBilgileri Where ID=@p1 and  ProjeninTeslimEdildigiDonem like'" + TextBox4.Text + "%'", sqlCon);
+            komut2.Parameters.AddWithValue("@p1", ID2);
+            DataTable dt = new DataTable();
+            using (SqlDataAdapter sda = new SqlDataAdapter(komut2))
+            {
+                sda.Fill(dt);
+                DataList1.DataSource = dt;
+
+                DataList1.DataBind();
+               
+            }
+            sqlCon.Close();
+        }
+
+        protected void Button5_Click(object sender, EventArgs e)
+        {
+            sqlCon.Open();
+            SqlCommand komut2 = new SqlCommand("Select * From YoneticiPdfBilgileri Where ID=@p1 and  ProjeBasligi like'" + TextBox5.Text + "%'", sqlCon);
+            komut2.Parameters.AddWithValue("@p1", ID2);
+            DataTable dt = new DataTable();
+            using (SqlDataAdapter sda = new SqlDataAdapter(komut2))
+            {
+                sda.Fill(dt);
+                DataList1.DataSource = dt;
+
+                DataList1.DataBind();
+                
+            }
+            sqlCon.Close();
+        }
+
+        protected void Button6_Click(object sender, EventArgs e)
+        {
+            sqlCon.Open();
+            SqlCommand komut2 = new SqlCommand("Select * From YoneticiPdfBilgileri Where  ID=@p1 and AnahtarKelimeler like'" + TextBox6.Text + "%'", sqlCon);
+      
+            komut2.Parameters.AddWithValue("@p1", ID2);
+            DataTable dt = new DataTable();
+            using (SqlDataAdapter sda = new SqlDataAdapter(komut2))
+            {
+                sda.Fill(dt);
+                DataList1.DataSource = dt;
+
+                DataList1.DataBind();
+             
+            }
+            sqlCon.Close();
+        }
+
+        protected void Button7_Click(object sender, EventArgs e)
+        {
+          
+                sqlCon.Open();
+                SqlCommand komut2 = new SqlCommand("Select * From YoneticiPdfBilgileri Where ID=@p1 and DanismanBilgiler like'" + TextBox7.Text + "%'", sqlCon);
+                komut2.Parameters.AddWithValue("@p1", ID2);
+                DataTable dt = new DataTable();
+                using (SqlDataAdapter sda = new SqlDataAdapter(komut2))
+                {
+                    sda.Fill(dt);
+                    DataList1.DataSource = dt;
+
+                    DataList1.DataBind();
+                }
+                sqlCon.Close();
+           
+        }
+
+        protected void Button8_Click(object sender, EventArgs e)
+        {
+    
+           
+        }
+    }
+}
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Yonetici.aspx.cs" Inherits="WebApplication4.Yonetici"  EnableEventValidation="false"%>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Yonetici Sayfası</title>
+    <style>
+    .body{background:#000000;}
+    .baslik{margin: 3% 0 0 25%;color:white}
+    .cerceve{background:#000000; width:100%; height:80%;margin:0 3% 0 0;float:left}
+    .kullanici{background:#0c6435 ;width:350px; height:600px;float:left; margin:20px 100px 0px 50px; border-radius:30px}
+    .kullanicipng{background:url(img/1.png); width:250px;height:200px; margin:25px 50px 5px 50px; border-radius:30px}
+    .table{display:block; margin-left:50px;}
+    .labelYazi{display:block; width:200px; height:20px; font:bold 25px tahoma ;margin-top:10px ;margin-left:50px}
+    .labelYazi2{display:block; width:200px; height:20px;font:bold 25px tahoma ;margin-top:0px  ;margin-left:95px; }
+    .textbox{display:block; border-radius:15px; font:bold 25px tahoma; text-align:center; margin:10px 0px 0px 25px;  }
+    .buton{display:block;border-radius:15px;font:bold 35px tahoma;margin:5px 0px 0px 25px}
+    .sorgu{background:#0c6435 ; width:900px; height:600px;float:right;margin-left:0px;margin-top:20px;border-radius:30px ;margin-right:80px}
+    .ortala{margin:10% auto} 
+        .auto-style1 {
+            background: #0c6435;
+            width: 996px;
+            height: 592px;
+            float: right;
+            margin-left: 0px;
+            margin-top: 20px;
+            border-radius: 30px;
+            margin-right:50px;
+    }
+        .auto-style2 {
+            background: #0c6435;
+            width: 354px;
+            height: 600px;
+            float: left;
+            margin: 20px 50px 0px 50px;
+            border-radius: 30px;
+        }
+        .auto-style3 {
+            margin: 10% auto 10% auto
+        }
+    </style>
+</head>
+<body class="body">
+    <form id="form1" runat="server">
+      
+            <h1 class="baslik" >YÖNETİCİ SAYFASINA HOŞGELDİNİZ</h1>
+         <div class="cerceve">
+            <%-- Kullanıcı için div --%>
+                 <div class="auto-style1">
+                   
+                     <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" BackColor="#CCCCCC" BorderColor="#999999" BorderStyle="Solid" BorderWidth="3px" CellPadding="4" CellSpacing="2" ForeColor="Black" Height="178px" Width="840px" CssClass="auto-style3" Font-Bold="True" Font-Names="Arial" Font-Size="Large"  >
+                         
+                        <Columns>
+                              <asp:TemplateField HeaderText="Kullanıcı Adı">                                
+                                <ItemTemplate >
+                                    <%# Eval("KullaniciAdi") %>
+                                </ItemTemplate>
+                            </asp:TemplateField>  
+
+                              <asp:TemplateField HeaderText="Kullanıcı Şifre">                                
+                                <ItemTemplate >
+                                    <%# Eval("KullaniciSifre") %>
+                                </ItemTemplate>
+                            </asp:TemplateField>  
+
+                            <asp:TemplateField HeaderText="ID">                                
+                                <ItemTemplate >
+                                    <%# Eval("ID") %>
+                                </ItemTemplate>
+                            </asp:TemplateField>   
+                           
+                            <asp:TemplateField HeaderText="Dosya Adi">                                
+                                <ItemTemplate >
+                                    <%# Eval("DosyaAdi") %>
+                                </ItemTemplate>
+                            </asp:TemplateField>  
+                              <asp:TemplateField HeaderText="Pdf ID">                                
+                                <ItemTemplate >
+                                    <%# Eval("PdfID") %>
+                                </ItemTemplate>
+                            </asp:TemplateField> 
+                            
+                                
+
+                           <asp:TemplateField HeaderText="Bilgiler">
+                               <ItemTemplate>
+                                   
+                                   <%--<asp:LinkButton ID="LinkButton1" runat="server"  OnClick="LinkButton1_Click" DataKeyNames="ProfilePic" > <%# Eval("DosyaAdi") %> Bilgileri</asp:LinkButton>--%>
+                              <asp:Button ID="buton1" runat="server"  OnClick="buton1_Click" Text="Bilgiler" Width="200px" Height="35px" CssClass="ortala"/>
+                                   </ItemTemplate>
+                           </asp:TemplateField>
+
+                        </Columns>
+                        <FooterStyle BackColor="#CCCCCC" />
+                        <HeaderStyle BackColor="Black" Font-Bold="True" ForeColor="White" />
+                        <PagerStyle BackColor="#CCCCCC" ForeColor="Black" HorizontalAlign="Left" />
+                        <RowStyle BackColor="White" />
+                        <SelectedRowStyle BackColor="#000099" Font-Bold="True" ForeColor="White" />
+                        <SortedAscendingCellStyle BackColor="#F1F1F1" />
+                        <SortedAscendingHeaderStyle BackColor="#808080" />
+                        <SortedDescendingCellStyle BackColor="#CAC9C9" />
+                        <SortedDescendingHeaderStyle BackColor="#383838" />
+                     </asp:GridView>
+                     
+                </div>
+            <div class="auto-style2">
+            <div class="kullanicipng"></div>
+            <table class="table">
+            <tr >
+             
+                <td class="labelYazi">
+                    <asp:Label ID="Label1" runat="server" Text="Kullanıcı Adı" ></asp:Label>
+                </td>
+                </tr>
+                <tr class="textbox">
+                   <td>
+                       <asp:TextBox ID="TextBox1" runat="server" Width="200px" Height="30px" BackColor="#c5d08b"  BorderWidth="0px" BorderStyle="None" Font-Bold="true" Font-Size="25px" ></asp:TextBox>
+                    </td>                    
+                </tr>          
+                <tr>                 
+                    <td class="labelYazi2">
+                        <asp:Label ID="Label2" runat="server" Text="Şifre"></asp:Label>
+                    </td>
+
+                </tr>
+                    <tr class="textbox">
+                       <td>
+                        <asp:TextBox ID="TextBox2" runat="server" Width="200px" Height="30px"  BackColor="#c5d08b" BorderWidth="0px" Font-Bold="true" Font-Size="25px" TextMode="Password" ></asp:TextBox>
+                       </td>
+                    </tr>
+               <tr>
+                   <td class="buton">
+                       <asp:Button ID="Button1" runat="server" Text="Kullanıcıyı Ekle" Width="200px"  Height="45px" Font-Bold="true" Font-Size="25px" BackColor="#c5d08b" OnClick="Button1_Click" />
+                   </td>
+               </tr>
+            <tr>
+                   <td class="buton">
+                       <asp:Button ID="Button2" runat="server" Text="Kullanıcıyı Sil" Width="200px"  Height="45px" Font-Bold="true" Font-Size="25px" BackColor="#c5d08b" OnClick="Button2_Click" />
+                   </td>
+               </tr>
+            <tr>
+                   <td class="buton">
+                       <asp:Button ID="Button3" runat="server" Text="Kullanıcıyı Güncelle" Width="200px"  Height="45px" Font-Bold="true" Font-Size="20px" BackColor="#c5d08b" OnClick="Button3_Click" />
+                   </td>
+               </tr>
+          
+                
+            </table>
+              
+            </div>
+                 </form>
+</body>
+</html>
+using System;
+using System.Data.SqlClient;
+using System.Data;
+using System.Configuration;
+using System.IO;
+using System.Web.UI.WebControls;
+using System.Data.OleDb;
+namespace WebApplication4
+{
+    public partial class Yonetici : System.Web.UI.Page
+    {
+      
+        SqlConnection con = new SqlConnection(@"Data Source=DESKTOP-ROLKJ2V;initial Catalog=Web;Integrated Security=true");
+        string connectionString = @"Data Source=DESKTOP-ROLKJ2V;Initial Catalog=Web;Integrated Security=True";
+        protected void Page_Load(object sender, EventArgs e)
+        {
+     
+            con.Open();
+            string select = "Select * From PdfBilgileri Inner Join KullaniciLogin on PdfBilgileri.ID=KullaniciLogin.ID";
+            SqlDataAdapter da = new SqlDataAdapter(select,con);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            GridView1.DataSource = dt;
+            GridView1.DataBind();
+            con.Close();
+
+            
+
+
+        }
+
+
+        
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            con.Open();
+            SqlCommand komut = new SqlCommand("insert into KullaniciLogin (KullaniciAdi,KullaniciSifre) values (@p1,@p2)", con);
+
+            komut.Parameters.AddWithValue("@p1", TextBox1.Text);
+            komut.Parameters.AddWithValue("@p2", TextBox2.Text);
+            komut.ExecuteNonQuery();
+            con.Close();
+
+            string myStringVariable = string.Empty;
+            myStringVariable = "Kullanıcı Başarıyla Kaydoldu";
+            ClientScript.RegisterStartupScript(this.GetType(), "myalert", "alert('" + myStringVariable + "');", true);
+        }
+
+        protected void Button2_Click(object sender, EventArgs e)
+        {
+            con.Open();
+            SqlCommand komutsil = new SqlCommand("Delete From KullaniciLogin Where KullaniciAdi=@k1", con);
+            komutsil.Parameters.AddWithValue("@k1", TextBox1.Text);
+            komutsil.ExecuteNonQuery();
+            con.Close();
+            string myStringVariable = string.Empty;
+            myStringVariable = "Kullanıcı Başarıyla Silindi";
+            ClientScript.RegisterStartupScript(this.GetType(), "myalert", "alert('" + myStringVariable + "');", true);
+        }
+
+        protected void Button3_Click(object sender, EventArgs e)
+        {
+            con.Open();
+            SqlCommand komutgüncelle = new SqlCommand("Update KullaniciLogin Set KullaniciAdi=@a1, KullaniciSifre=@a2 where KullaniciAdi=@a3", con);
+            komutgüncelle.Parameters.AddWithValue("@a1", TextBox1.Text);
+            komutgüncelle.Parameters.AddWithValue("@a2", TextBox2.Text);
+            komutgüncelle.Parameters.AddWithValue("@a3", TextBox1.Text);
+            komutgüncelle.ExecuteNonQuery();
+            con.Close();
+            string myStringVariable = string.Empty;
+            myStringVariable = "Kullanıcı Başarıyla Güncellendi";
+            ClientScript.RegisterStartupScript(this.GetType(), "myalert", "alert('" + myStringVariable + "');", true);
+        }
+        protected void buton1_Click(object sender, EventArgs e)
+        {
+            Button link = sender as Button;
+            GridViewRow gridRow = link.NamingContainer as GridViewRow;
+            int satir = gridRow.RowIndex;
+
+          
+
+                con.Open();
+                string select = "Select * From PdfBilgileri";
+                SqlDataAdapter da = new SqlDataAdapter(select, con);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                GridView1.DataSource = dt;
+                string ID3= dt.Rows[1][0].ToString();
+                String DosyaAdi2 = dt.Rows[satir][1].ToString();
+                String PdfID = dt.Rows[satir][3].ToString();
+                Response.Redirect("YoneticiPdfBilgileri.aspx?DosyaAdi=" + DosyaAdi2 + "&PdfID=" + PdfID + "&ID=" + ID3);
+                GridView1.DataBind();
+                con.Close();
+
+               
+            
+        }
+
+      
+    }
+}
+
+</html>
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="YoneticiPdfBilgileri.aspx.cs" Inherits="WebApplication4.YoneticiPdfBilgileri" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Kullanici PDF Sayfasi</title>
+    <style>
+        .baslik{margin: 1% 0 0 32%;color:white}
+        .body{background:#000000;}
+        .cerceve{background:#000000; width:100%; height:85%;margin:0 3% 0 0;float:left}
+        .kullanici{background:#0c6435 ;width:45%; height:650px;float:left; margin-top:1%;margin-left:1%; border-radius:30px;padding-left:2%}
+        .sorgu{background:#0c6435 ; width:40%; height:650px;float:right;margin-top:1%; border-radius:30px }
+        .labelYazi{display:block; width:400px; height:25px; font:bold 25px tahoma ;margin-top:5px ;margin-left:50px}
+        .ortala{margin-left:5px}
+        .auto-style1 {
+            background: #0c6435;
+            width: 40%;
+            height: 1035px;
+            float: left;
+            margin-top: 1%;
+         
+            margin-left: 1%;
+            border-radius: 30px;
+            padding-left: 2%;
+        }
+        .auto-style2 {
+            background: #0c6435;
+            width: 55%;
+            height: 1032px;
+            float: right;
+            margin-top: 1%;
+            border-radius: 30px;
+            color:aliceblue;
+        }
+        .auto-style3 {
+            display: block;
+            font: bold 25px tahoma;
+            margin-top: 5px;
+            
+        }
+        .auto-style4 {
+            display: block;
+            font: bold 25px tahoma;
+            margin-top: 0px;
+            margin-left: 50px;
+        }
+        .auto-style5 {
+            display: block;
+            font: bold 25px tahoma;
+            margin-top: 5px;
+            margin-left: 50px;
+        }
+        .auto-style6 {
+            background: #000000;
+            width: 97%;
+            height: 1089px;
+            margin: 0 3% 0 0;
+            float: left;
+        }
+        .auto-style7 {
+            width: 100%;
+        }
+        .Bir{Width:5%}
+        .iki{Width:10%}
+        .uc{Width:15%}
+        .dort{Width:10%}
+        .bes{Width:10%}
+        .alti{Width:20%}
+        .yedi{Width:10%}
+        .sekiz{Width:20%}
+
+        </style>
+</head>
+<body class="body">
+    <form id="form2" runat="server">
+        <h1 class="baslik" >KULLANICILARIN PDF BİLGİLERİ</h1>
+        <div class="auto-style6">
+            <%--Bilgiler Kısmı--%>
+            <div class="auto-style2">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:WebConnectionString %>" SelectCommand="SELECT * FROM [YoneticiPdfBilgileri]"></asp:SqlDataSource>
+                <br />
+                <br />
+                <br />
+                &nbsp;&nbsp;<asp:DataList ID="DataList1" runat="server" BackColor="#CCCCCC" BorderColor="#999999" BorderStyle="Solid" BorderWidth="3px" CellPadding="4" CellSpacing="2" ForeColor="Black" GridLines="Both" Width="100%" Height="500px" CssClass="ortala">
+                    <FooterStyle BackColor="#CCCCCC" />
+                    <HeaderStyle BackColor="Black" Font-Bold="True" ForeColor="White" />
+                    <HeaderTemplate>
+                        <table class="auto-style7">
+                            <tr>
+                                <td class="Bir">ID</td>
+                                <td class="iki">Yazar Bilgisi</td>
+                                <td class="uc">Ders adı</td>
+                               
+                                <td class="dort">Tarih</td>
+                                <td class="bes">Baslik</td>
+                                <td class="alti">Anahtar Kelimeler</td>
+                                <td class="yedi">Danışman</td>
+                                <td class="sekiz">Juri Bilgisi</td>
+                            </tr>
+                        </table>
+                    </HeaderTemplate>
+                    <ItemStyle BackColor="White" />
+                    <ItemTemplate>
+                        <table class="auto-style7">
+                            <tr>
+                                <td class="Bir"><%# Eval("PdfID")%></td>
+                                <td class="iki"><%# Eval("YazarBilgileri")%></td>
+                                <td class="uc"><%# Eval("DersAdi")%></td>
+                               
+                                <td class="dort"><%# Eval("ProjeninTeslimEdildigiDonem")%></td>
+                                <td class="bes"><%# Eval("ProjeBasligi")%></td>
+                                <td class="alti"><%# Eval("AnahtarKelimeler")%></td>
+                                <td class="yedi"><%# Eval("DanismanBilgiler")%></td>
+                                <td class="sekiz"><%# Eval("JuriBilgileri")%></td>
+                            </tr>
+                        </table>
+                    </ItemTemplate>
+                    <SelectedItemStyle BackColor="#000099" Font-Bold="True" ForeColor="White" />
+                </asp:DataList>
+            </div>
+            <div class="auto-style1">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <asp:Label ID="Label1" runat="server" Text="Yazar Bilgileri" CssClass="auto-style3" Width="210px" ForeColor="White"></asp:Label>
+                    <br />
+                    <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <asp:TextBox ID="TextBox1" runat="server" Height="32px" Width="400px" Font-Bold="True" Font-Names="Arial" Font-Size="18px"></asp:TextBox> 
+                    <asp:Button ID="Button1" runat="server" Font-Bold="True" Font-Names="Arial" Font-Size="Large" Height="37px" OnClick="Button1_Click" Text="Ara" Width="65px" />
+                    <br /> 
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                    <asp:Label ID="Label2" runat="server" Text="Ders Adı" CssClass="auto-style3" Width="217px" ForeColor="White"></asp:Label>
+                    <br />
+                    <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <asp:TextBox ID="TextBox2" runat="server" Height="32px" Width="400px" Font-Bold="True" Font-Names="Arial" Font-Size="18px"></asp:TextBox>
+                    <asp:Button ID="Button2" runat="server" Text="Ara" OnClick="Button2_Click" Font-Bold="True" Font-Names="Arial" Font-Size="Large" Height="37px" Width="65px" />
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+                    <asp:Label ID="Label3" runat="server" Text="Proje Özeti" CssClass="auto-style3" Height="34px" ForeColor="White"></asp:Label>
+                    <br />
+                    <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <asp:TextBox ID="TextBox3" runat="server" Height="212px" Width="400px" Font-Bold="True" Font-Names="Arial" Font-Size="18px" TextMode="MultiLine" > </asp:TextBox>
+                    
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <asp:Label ID="Label4" runat="server" Text="Projenin Teslim Edildiği Dönem" CssClass="auto-style3" Height="35px" Width="412px" ForeColor="White" ></asp:Label>
+                    <br />
+                    <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <asp:TextBox ID="TextBox4" runat="server" Height="32px" Width="400px" Font-Bold="True" Font-Names="Arial" Font-Size="18px"></asp:TextBox>
+                    <asp:Button ID="Button4" runat="server" Text="Ara" OnClick="Button4_Click" Font-Bold="True" Font-Names="Arial" Font-Size="Large" Height="37px" Width="65px" />
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <asp:Label ID="Label5" runat="server" Text="Proje Başlığı" CssClass="auto-style3" Height="33px" Width="184px" ForeColor="White"></asp:Label>
+                    <br />
+&nbsp;<br />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <asp:TextBox ID="TextBox5" runat="server" Height="32px" Width="400px" Font-Bold="True" Font-Names="Arial" Font-Size="18px"></asp:TextBox>
+                    <asp:Button ID="Button5" runat="server" Text="Ara" OnClick="Button5_Click" Font-Bold="True" Font-Names="Arial" Font-Size="Large" Height="37px" Width="65px" />
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <asp:Label ID="Label6" runat="server" Text="Anahtar Kelimeler" CssClass="auto-style4" Width="249px" ForeColor="White"></asp:Label>
+                    <br />
+                    <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <asp:TextBox ID="TextBox6" runat="server" Height="32px" Width="400px" Font-Bold="True" Font-Italic="False" Font-Names="Arial" Font-Size="18px"></asp:TextBox>
+                    <asp:Button ID="Button6" runat="server" Text="Ara" OnClick="Button6_Click" Font-Bold="True" Font-Names="Arial" Font-Size="Large" Height="37px" Width="65px" />
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <asp:Label ID="Label7" runat="server" Text="Danışman Bilgileri" CssClass="auto-style5" Width="264px" ForeColor="White" ></asp:Label>
+                    <br />
+                    <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <asp:TextBox ID="TextBox7" runat="server" Height="32px" Width="400px" Font-Bold="True" Font-Names="Arial" Font-Size="18px"></asp:TextBox>
+                    <asp:Button ID="Button7" runat="server" Text="Ara" OnClick="Button7_Click" Font-Bold="True" Font-Names="Arial" Font-Size="Large" Height="37px" Width="65px" />
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <asp:Label ID="Label8" runat="server" Text="Jüri Bilgileri" CssClass="auto-style5" Width="262px" ForeColor="White"></asp:Label>
+                    <br />
+                    <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <asp:TextBox ID="TextBox8" runat="server" Height="32px" Width="400px" Font-Bold="True" Font-Names="Arial" Font-Size="18px" ></asp:TextBox>
+            </div>
+            <br />
+            <%--Sorgu Kısmı--%>
+        </div>
+    </form>
+</body>
+</html>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using iTextSharp.text.pdf;
+using iTextSharp.text.pdf.parser;
+using System.IO;
+using System.Data.SqlClient;
+using System.Data;
+
+namespace WebApplication4
+{
+
+    public partial class YoneticiPdfBilgileri : System.Web.UI.Page
+    {
+
+        SqlConnection sqlCon = new SqlConnection(@"Data Source=DESKTOP-ROLKJ2V;initial Catalog=Web;Integrated Security=true");
+        static public string TeslimDonem;
+        static public string AnahtarKelime;
+        static public string Ogrenci;
+        static public string DersAdi;
+        static public string Ozet;
+        static public string Danisman;
+        static public string Juri;
+        static public string ProjeAdi;
+ 
+        protected void Page_Load(object sender, EventArgs e)
+        {
+
+            string DosyaAdi = Request.QueryString["DosyaAdi"];
+            string PdfID = Request.QueryString["PdfID"];
+            int  ID2 = Convert.ToInt32(Request.QueryString["ID"]);
+            int PDFID = Convert.ToInt32(PdfID);
+
+            string PdfUrl = @"C:\Users\LENOVO\source\repos\WebApplication4\WebApplication4\Files\" + DosyaAdi;
+
+            string Arama1 = pdf2(PdfUrl);
+            string Arama2 = pdf1(PdfUrl);
+            string Ogrenci = YazarBilgisiAra(Arama1);
+            string DersAdı = DersAdiAra(Arama2);
+            string Ozet = ProjeOzetiAra(Arama1);
+            string Tarih = TeslimDonemAra(Arama2);
+            string ProjeAdı = ProjeBasligiAra(Arama2);
+            string AnahtarKelime = AnahtarKelimeleriAra(Arama2);
+            string Danisman = DanismanBilgileriAra(Arama2);
+            string Juri = JuriBilgileriAra(Arama2);
+
+            sqlCon.Open();
+            SqlCommand komut = new SqlCommand("Select * From YoneticiPdfBilgileri where PdfID=@p1 ", sqlCon);
+            komut.Parameters.AddWithValue("@p1", PDFID);
+            SqlDataReader dr = komut.ExecuteReader();
+
+            if (dr.Read() == false)
+            {
+                sqlCon.Close();
+                sqlCon.Open();
+                SqlCommand cmd = new SqlCommand("insert into YoneticiPdfBilgileri (PdfID,YazarBilgileri,DersAdi,ProjeOzeti,ProjeninTeslimEdildigiDonem,ProjeBasligi,AnahtarKelimeler,DanismanBilgiler,JuriBilgileri,ID) values(@p1,@p2,@p3,@p4,@p5,@p6,@p7,@p8,@p9,@p10)", sqlCon);
+                cmd.Parameters.AddWithValue("@p1", PDFID);
+                cmd.Parameters.AddWithValue("@p2", Ogrenci);
+                cmd.Parameters.AddWithValue("@p3", DersAdı);
+                cmd.Parameters.AddWithValue("@p4", Ozet);
+                cmd.Parameters.AddWithValue("@p5", Tarih);
+                cmd.Parameters.AddWithValue("@p6", ProjeAdı);
+                cmd.Parameters.AddWithValue("@p7", AnahtarKelime);
+                cmd.Parameters.AddWithValue("@p8", Danisman);
+                cmd.Parameters.AddWithValue("@p9", Juri);
+                cmd.Parameters.AddWithValue("@p10", ID2);
+                cmd.ExecuteNonQuery();
+                sqlCon.Close();
+            }
+            sqlCon.Close();
+        }
+
+        public string pdf2(string pdfYolu)
+        {
+            if (File.Exists(pdfYolu))
+            {
+                PdfReader pdfOkuyucu = new PdfReader(pdfYolu);
+                string icerik = "";
+                for (int sayfa = 2; sayfa <= pdfOkuyucu.NumberOfPages; sayfa++)
+                {
+                    icerik += PdfTextExtractor.GetTextFromPage(pdfOkuyucu, sayfa);
+                }
+                pdfOkuyucu.Close();
+
+                return icerik;
+            }
+            else
+            {
+
+                return "Yok";
+            }
+
+        }
+        public string pdf1(string pdfYolu)
+        {
+
+            if (File.Exists(pdfYolu))
+            {
+                PdfReader pdfOkuyucu = new PdfReader(pdfYolu);
+                string icerik = "";
+                for (int sayfa = 1; sayfa <= pdfOkuyucu.NumberOfPages; sayfa++)
+                {
+                    icerik += PdfTextExtractor.GetTextFromPage(pdfOkuyucu, sayfa);
+                }
+                pdfOkuyucu.Close();
+
+                return icerik;
+            }
+            else
+            {
+
+                return "Yok";
+            }
+
+        }
+        public string YazarBilgisiAra(string metin)
+        {
+            char[] strArray = metin.ToCharArray();
+            int Sonuc1 = metin.IndexOf("Öğrenci No:", 0, metin.Length - 1);
+            int Sonuc2 = metin.IndexOf("İÇİNDEKİLER", 0, metin.Length - 1);
+
+            Ogrenci = metin.Substring(Sonuc1, Sonuc2 - Sonuc1);
+            Ogrenci = Ogrenci.Replace("Öğrenci No:", String.Empty);
+            Ogrenci = Ogrenci.Replace("Adı Soyadı:", String.Empty);
+            Ogrenci = Ogrenci.Replace("İmza:", String.Empty);
+            Ogrenci = Ogrenci.Replace(".", String.Empty);
+            Ogrenci = Ogrenci.Replace("\n", String.Empty);
+
+            TextBox1.Text = Ogrenci;
+
+            return Ogrenci;
+        }
+        string DersAdiAra(string metin)
+        {
+            int Sonuc1 = metin.IndexOf("ARAŞTIRMA PROBLEMLERİ", 0, metin.Length - 1);
+            int Sonuc2 = metin.IndexOf("BİTİRME PROJESİ", 0, metin.Length - 1);
+
+            if (Sonuc1 != -1)
+            {
+                DersAdi = metin.Substring(Sonuc1, 21);
+                TextBox2.Text = DersAdi;
+                return DersAdi;
+            }
+            else
+            {
+                DersAdi = metin.Substring(Sonuc2, 15);
+                TextBox2.Text = DersAdi;
+                return DersAdi;
+            }
+        }
+        string ProjeOzetiAra(string metin)
+        {
+            int Sonuc1 = metin.LastIndexOf("ÖZET");
+            int Sonuc2 = metin.LastIndexOf("Anahtar kelimeler:");
+            Sonuc2 = Sonuc2 - Sonuc1 - 5;
+            Ozet = metin.Substring(Sonuc1 + 5, Sonuc2);
+            TextBox3.Text = Ozet;
+            return Ozet;
+        }
+        public string TeslimDonemAra(string metin)
+        {
+
+            int metin2 = metin.IndexOf("Tarih:", 0, metin.Length - 1);
+
+            TeslimDonem = metin.Substring(metin2 + 6, 15);
+            TeslimDonem = TeslimDonem.Replace(" ", String.Empty);
+            char[] strArray = TeslimDonem.ToCharArray();
+            int j = 0;
+            for (int i = 1; i < strArray.Length; i++)
+            {
+                if (char.IsDigit(strArray[i]))
+                    if (char.IsDigit(strArray[i + 1]))
+                        if (char.IsDigit(strArray[i + 2]))
+                            if (char.IsDigit(strArray[i + 3]))
+                            {
+                                j = i;
+                                TeslimDonem = TeslimDonem.Substring(i - 3, 7);
+                                break;
+                            }
+            }
+
+            TeslimDonem = TeslimDonem.Replace(" ", String.Empty);
+
+            int ay = Convert.ToInt32(TeslimDonem.Substring(0, 2));
+            int yil = Convert.ToInt32(TeslimDonem.Substring(TeslimDonem.Length - 4, 4));
+            if (ay < 9)
+            {
+                TeslimDonem = (yil - 1).ToString() + "-" + yil.ToString() + " BAHAR";
+            }
+            else
+            {
+                TeslimDonem = (yil).ToString() + (yil + 1).ToString() + " GÜZ";
+            }
+
+            TextBox4.Text = TeslimDonem;
+            return TeslimDonem;
+        }
+        public string ProjeBasligiAra(string metin)
+        {
+
+            char[] strArray = metin.ToCharArray();
+            int metin2 = DersAdi.Length;
+            int Sonuc1 = metin.IndexOf(DersAdi, 0, metin.Length - 1);
+            Sonuc1 = Sonuc1 + metin2;
+            string alfabe = "ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZabcçdefgğhıijklmnoöprsştuüvyz";
+            int k = 0;
+            for (int i = Sonuc1; i < metin.Length; i++)
+            {
+                int t = alfabe.IndexOf(strArray[i], 0, alfabe.Length - 1);
+                if (t != -1)
+                {
+                    int e = 0;
+                    for (int j = i; j < metin.Length; j++)
+                    {
+                        if (strArray[j] == '\n')
+                            e++;
+
+                        if (e > 1)
+                        {
+                            k = j;
+                            break;
+                        }
+
+                    }
+                    break;
+                }
+            }
+            ProjeAdi = metin.Substring(Sonuc1, k - Sonuc1);
+            ProjeAdi = ProjeAdi.Replace("\n", String.Empty);
+            TextBox5.Text = ProjeAdi;
+            return ProjeAdi;
+        }
+
+        public string AnahtarKelimeleriAra(string metin)
+        {
+            char[] strArray = metin.ToCharArray();
+            int b, a = 0;
+
+            int Sonuc = metin.IndexOf("Anahtar kelimeler:", 0, metin.Length - 1);
+            b = Sonuc + 18;
+            for (int i = Sonuc + 18; i < strArray.Length; i++)
+            {
+                a++;
+                if (strArray[i] == ',' || strArray[i] == '.')
+                {
+                    AnahtarKelime += metin.Substring(b, a - 1) + "  -   ";
+                    b = i + 1;
+                    a = 0;
+                }
+                if (strArray[i] == '.')
+                    break;
+            }
+            AnahtarKelime = AnahtarKelime + "  ";
+            AnahtarKelime = AnahtarKelime.Replace("\n", String.Empty);
+            AnahtarKelime = AnahtarKelime.Replace("-     ", String.Empty);
+            TextBox6.Text = AnahtarKelime;
+            return AnahtarKelime;
+
+        }
+
+        public string DanismanBilgileriAra(string metin)
+        {
+            string metin2 = "";
+            char[] strArray = metin.ToCharArray();
+            int Sonuc1 = metin.IndexOf("Danışman", 0, metin.Length - 1);
+            int a = 0;
+            for (int i = Sonuc1 - 1; i > 0; i--)
+            {
+                a++;
+                if (strArray[i - 1] == '\n')
+                {
+                    metin2 += metin.Substring(i - 1, a);
+                    break;
+                }
+            }
+            for (int i = Sonuc1; i < Sonuc1 + 8; i++)
+            {
+                strArray[i] = 'a';
+            }
+            metin = new string(strArray);
+
+            int b = 1;
+            for (int e = 0; e < 5; e++)
+            {
+                Sonuc1 = metin.IndexOf("Danışman", 0, metin.Length - 1);
+                if (Sonuc1 != -1)
+                {
+                    a = 0;
+                    for (int i = Sonuc1 - 1; i > 0; i--)
+                    {
+                        a++;
+                        if (strArray[i - 1] == '\n')
+                        {
+                            metin2 += "-  " + metin.Substring(i, a);
+                            b++;
+                            break;
+                        }
+                    }
+                    for (int i = Sonuc1; i < Sonuc1 + 8; i++)
+                    {
+                        strArray[i] = 'a';
+                    }
+                    metin = new string(strArray);
+                }
+            }
+            Danisman = metin2;
+            Danisman = Danisman.Replace("\n", String.Empty);
+            TextBox7.Text = Danisman;
+            return Danisman;
+
+        }
+
+
+        public string JuriBilgileriAra(string metin)
+        {
+            string metin2 = metin;
+            char[] strArray = metin.ToCharArray();
+            int Sonuc1 = metin.IndexOf("Jüri Üyesi", 0, metin.Length - 1);
+            int a = 0;
+            for (int i = Sonuc1 - 1; i > 0; i--)
+            {
+                a++;
+                if (strArray[i] == '\n')
+                {
+                    Juri += metin.Substring(i, a);
+                    break;
+                }
+            }
+            for (int i = Sonuc1; i < Sonuc1 + 10; i++)
+            {
+                strArray[i] = 'a';
+            }
+            metin = new string(strArray);
+
+            int b = 1;
+            for (int e = 0; e < 5; e++)
+            {
+                Sonuc1 = metin.IndexOf("Jüri Üyesi", 0, metin.Length - 1);
+                if (Sonuc1 != -1)
+                {
+                    a = 0;
+                    for (int i = Sonuc1 - 1; i > 0; i--)
+                    {
+                        a++;
+                        if (strArray[i - 1] == '\n')
+                        {
+                            Juri += "-  " + metin.Substring(i, a);
+                            b++;
+                            break;
+                        }
+                    }
+                    for (int i = Sonuc1; i < Sonuc1 + 8; i++)
+                    {
+                        strArray[i] = 'a';
+                    }
+                    metin = new string(strArray);
+                }
+            }
+            metin = metin2;
+
+            Juri = Juri.Replace("\n", String.Empty);
+            Juri = Juri.Replace("    ", String.Empty);
+            TextBox8.Text = Juri;
+            return Juri;
+        }
+
+            protected void Button1_Click(object sender, EventArgs e)
+             {
+
+            sqlCon.Open();
+            SqlCommand komut2 = new SqlCommand("Select * From YoneticiPdfBilgileri Where YazarBilgileri like'" + TextBox1.Text + "%'", sqlCon);
+            
+            DataTable dt = new DataTable();
+            using (SqlDataAdapter sda = new SqlDataAdapter(komut2))
+            {
+                sda.Fill(dt);
+                DataList1.DataSource = dt;
+
+                DataList1.DataBind();
+            }
+            sqlCon.Close();
+
+        }
+
+        protected void Button2_Click(object sender, EventArgs e)
+        {
+
+
+            sqlCon.Open();
+            SqlCommand komut2 = new SqlCommand("Select * From YoneticiPdfBilgileri Where DersAdi like'" + TextBox2.Text + "%'", sqlCon);
+           
+            DataTable dt = new DataTable();
+            using (SqlDataAdapter sda = new SqlDataAdapter(komut2))
+            {
+                sda.Fill(dt);
+                DataList1.DataSource = dt;
+
+                DataList1.DataBind();
+
+            }
+            sqlCon.Close();
+
+
+        }
+
+        protected void Button3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void Button4_Click(object sender, EventArgs e)
+        {
+            sqlCon.Open();
+            SqlCommand komut2 = new SqlCommand("Select * From YoneticiPdfBilgileri Where ProjeninTeslimEdildigiDonem like'" + TextBox4.Text + "%'", sqlCon);
+        
+            DataTable dt = new DataTable();
+            using (SqlDataAdapter sda = new SqlDataAdapter(komut2))
+            {
+                sda.Fill(dt);
+                DataList1.DataSource = dt;
+
+                DataList1.DataBind();
+
+            }
+            sqlCon.Close();
+        }
+
+        protected void Button5_Click(object sender, EventArgs e)
+        {
+            sqlCon.Open();
+            SqlCommand komut2 = new SqlCommand("Select * From YoneticiPdfBilgileri Where ProjeBasligi like'" + TextBox5.Text + "%'", sqlCon);
+    
+            DataTable dt = new DataTable();
+            using (SqlDataAdapter sda = new SqlDataAdapter(komut2))
+            {
+                sda.Fill(dt);
+                DataList1.DataSource = dt;
+
+                DataList1.DataBind();
+
+            }
+            sqlCon.Close();
+        }
+
+        protected void Button6_Click(object sender, EventArgs e)
+        {
+            sqlCon.Open();
+            SqlCommand komut2 = new SqlCommand("Select * From YoneticiPdfBilgileri Where  AnahtarKelimeler like'" + TextBox6.Text + "%'", sqlCon);
+          
+            DataTable dt = new DataTable();
+            using (SqlDataAdapter sda = new SqlDataAdapter(komut2))
+            {
+                sda.Fill(dt);
+                DataList1.DataSource = dt;
+
+                DataList1.DataBind();
+
+            }
+            sqlCon.Close();
+        }
+
+        protected void Button7_Click(object sender, EventArgs e)
+        {
+
+            sqlCon.Open();
+            SqlCommand komut2 = new SqlCommand("Select * From YoneticiPdfBilgileri Where DanismanBilgiler like'" + TextBox7.Text + "%'", sqlCon);
+    
+            DataTable dt = new DataTable();
+            using (SqlDataAdapter sda = new SqlDataAdapter(komut2))
+            {
+                sda.Fill(dt);
+                DataList1.DataSource = dt;
+
+                DataList1.DataBind();
+            }
+            sqlCon.Close();
+
+        }
+
+        protected void Button8_Click(object sender, EventArgs e)
+        {
+
+        
+
+        }
+    }
+}
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  For more information on how to configure your ASP.NET application, please visit
+  https://go.microsoft.com/fwlink/?LinkId=169433
+  -->
+<configuration>
+	<connectionStrings>
+  <add name="MyDBConnectionString" connectionString="Data Source=DESKTOP-ROLKJ2V;Initial Catalog=Web;Integrated Security=True"
+   providerName="System.Data.SqlClient" />
+  <add name="WebConnectionString" connectionString="Data Source=DESKTOP-ROLKJ2V;Initial Catalog=Web;Integrated Security=True"
+   providerName="System.Data.SqlClient" />
+ </connectionStrings>
+  <system.web>
+    <compilation debug="true" targetFramework="4.7.2" />
+    <httpRuntime targetFramework="4.7.2" />
+  </system.web>
+  <system.codedom>
+    <compilers>
+      <compiler language="c#;cs;csharp" extension=".cs" type="Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider, Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=2.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" warningLevel="4" compilerOptions="/langversion:default /nowarn:1659;1699;1701" />
+      <compiler language="vb;vbs;visualbasic;vbscript" extension=".vb" type="Microsoft.CodeDom.Providers.DotNetCompilerPlatform.VBCodeProvider, Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=2.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" warningLevel="4" compilerOptions="/langversion:default /nowarn:41008 /define:_MYTYPE=\&quot;Web\&quot; /optionInfer+" />
+    </compilers>
+  </system.codedom>
+</configuration>
